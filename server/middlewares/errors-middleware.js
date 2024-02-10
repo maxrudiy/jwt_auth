@@ -5,13 +5,9 @@ const errorLogger = (err, req, res, next) => {
   return next(err);
 };
 const errorResponce = (err, req, res, next) => {
-  try {
-    if (err instanceof ApiError) {
-      return res.status(err.status).json({ message: err.message, errors: err.errors });
-    }
-  } catch (err) {
-    return res.status(500).json({ message: "Internal Server Error" });
-  }
+  err instanceof ApiError
+    ? res.status(err.status).json({ message: err.message, errors: err.errors })
+    : res.status(500).json({ message: "Internal Server Error" });
 };
 
 export { errorLogger, errorResponce };

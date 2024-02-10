@@ -6,7 +6,7 @@ const authMiddleware = (group) => {
     try {
       //const { authorization } = req.header
       const authorization = req.get("authorization");
-      if (!authorization || !authorization.startsWith("Bearer")) {
+      if (!authorization && !authorization.startsWith("Bearer")) {
         return next(ApiError.Unauthorized());
       }
       const accessToken = authorization.substring(7);
@@ -14,10 +14,10 @@ const authMiddleware = (group) => {
         return next(ApiError.Unauthorized());
       }
       const payload = TokenService.verifyAccessToken(accessToken);
-      if (!payload || !payload.groups.find((value) => value.group === group)) {
+      if (!payload && !payload.groups.find((value) => value.group === group)) {
         return next(ApiError.Unauthorized());
       }
-      req.user = payload.userId;
+      req.user = payload;
       return next();
     } catch (err) {
       return next(ApiError.Unauthorized());
