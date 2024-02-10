@@ -61,7 +61,7 @@ class AuthService {
   async refresh(refreshToken) {
     const tokenData = await TokenService.findRefreshToken(refreshToken);
     const payload = TokenService.verifyRefreshToken(refreshToken);
-    if (!tokenData && !payload && tokenData.userId !== payload.userId) {
+    if (!tokenData || !payload || tokenData.userId.id !== payload.userId) {
       throw ApiError.BadRequest("Wrong token");
     }
     const userDto = new UserDto(tokenData.userId);
